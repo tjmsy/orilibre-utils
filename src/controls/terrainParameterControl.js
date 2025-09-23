@@ -2,7 +2,7 @@ import UIManager from "./UIManager.js";
 import EventManager from "./EventManager.js";
 
 const demSource = new mlcontour.DemSource({
-  url: "https://gbank.gsj.jp/seamless/elev/terrainRGB/land/{z}/{y}/{x}.png",
+  url: "https://gbank.gsj.jp/seamless/elev/terrainRGB/mixed/{z}/{y}/{x}.png",
   encoding: "mapbox",
   minzoom: 0,
   maxzoom: 15,
