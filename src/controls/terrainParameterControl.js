@@ -2,7 +2,7 @@ import UIManager from "./UIManager.js";
 import EventManager from "./EventManager.js";
 
 const demSource = new mlcontour.DemSource({
-  url: "https://gsj-seamless.jp/seamless/elev/php/terrainRGB.php?url=https://tiles.gsj.jp/tiles/elev/mixed/{z}/{y}/{x}.png",
+  url: "https://tiles.gsj.jp/tiles/elev/land/{z}/{y}/{x}.png",
   encoding: "mapbox",
   minzoom: 0,
   maxzoom: 15,
