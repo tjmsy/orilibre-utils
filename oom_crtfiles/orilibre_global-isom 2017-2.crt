@@ -1,0 +1,56 @@
+# 等高線
+101 ele AND level = 0
+
+# 計曲線
+102 ele AND level = 1
+
+# 岩石地
+208 class = rock
+
+# 砂地
+213 class = sand
+
+# 水域
+301.1 _sourceLayer = water
+
+# 河川
+304 _sourceLayer = waterway AND brunnel != tunnel
+
+# 湿地
+307.1 class = wetland
+
+# 開けた土地 Open land
+401 class = grassland OR class = heath OR class = logging OR class = grass
+
+# 森
+405 class = forest OR class = wood OR class = park OR subclass = park
+
+# 植生(走行困難)
+408 subclass = scrub OR wood:density = dense
+
+# 耕作地
+412 class = farmland
+
+# 舗装区域
+501.1 class = pitch OR class = track OR class = theme_park OR class = stadium
+
+# 広い道路
+502 class = motorway OR class = trunk OR class = primary
+
+# 道路
+503 _sourceLayer = transportation AND class != motorway AND class != trunk AND class != primary
+
+# 徒歩道
+505 class = path OR class =pedestrian
+
+# 電車。地下部分・索道を除外
+509 class = rail
+
+# 立入禁止
+520 _sourceLayer = landuse AND class != grass AND class != stadium  AND class != pitch AND class != track AND class != theme_park
+
+# 建物
+521.3 _sourceLayer = building
+
+# 階段
+532 subclass = steps

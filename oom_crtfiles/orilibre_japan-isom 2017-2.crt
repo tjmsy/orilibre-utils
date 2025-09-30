@@ -1,0 +1,87 @@
+# 等高線
+101 ele AND level = 0
+
+# 計曲線
+102 ele AND level = 1
+
+# 岩石地
+208 class = rock OR subclass = scree
+
+# 砂礫地
+210 ftCode = 7403
+
+# 砂地
+213 class = sand
+
+# 水域面
+301.1 ftCode = 5000
+
+# 水涯線
+## 河川
+301.4 ftCode = 5201 OR ftCode = 5202 OR ftCode = 5203
+## 湖池
+301.4 ftCode = 5231 OR ftCode = 5232 OR ftCode = 5233
+## 海岸線
+301.4 ftCode = 5101 OR ftCode = 5102 OR ftCode = 5103
+
+# 一条河川
+304 ftCode = 5301
+
+# 枯れ川
+306 ftCode = 5302
+
+# 湿地
+307.1 ftCode = 7401
+
+# 開けた土地 Open land
+401 class = grassland OR class = heath OR class = logging OR class = grass
+
+# 森
+405 class = forest OR class = wood OR class = park OR subclass = park
+
+# 植生(走行困難)
+408 subclass = scrub OR wood:density = dense
+
+# 耕作地
+412 筆ポリゴン
+
+# 舗装区域
+501.1 class = pitch OR class = track OR class = theme_park OR class = stadium
+
+# 広い道路
+## 幅員区分5.5m-13m未満。トンネルを除外。
+502 rnkWidth = 2 AND ftCode != 2704 AND ftCode != 2714
+## 幅員区分13m以上19.5m未満。トンネルを除外。
+502 rnkWidth = 3 AND ftCode != 2704 AND ftCode != 2714
+## 幅員区分19.5m以上。トンネルを除外。
+502 rnkWidth = 4 AND ftCode != 2704 AND ftCode != 2714
+
+# 道路
+## 幅員区分 3m未満。徒歩道・石段・トンネルを除外。
+503 rnkWidth = 0 AND NOT ftCode ~= 272 AND NOT ftCode ~= 273 AND NOT ftCode ~= 4
+## 幅員区分 3m以上5.5m未満。石段・トンネルを除外。
+503 rnkWidth = 1 AND NOT ftCode ~= 273 AND NOT ftCode ~= 4
+
+# 徒歩道
+505 ftCode = 2721 OR ftCode = 2722 OR ftCode = 2723
+
+# 電車。地下部分・索道を除外
+509 ftCode = 8201 AND railState != 2 AND railState != 3 AND NOT rtCode ~= 40206
+
+# 索道・送電線
+510 rtCode ~= 40206 OR ftCode = 8202
+
+# 立入禁止
+520 _sourceLayer = landuse AND class != grass AND class != stadium  AND class != pitch AND class != track AND class != theme_park
+
+# 建物
+521.3 ftCode = 3101 OR ftCode = 3102 OR ftCode = 3103
+
+# 無壁舎
+522.1 ftCode = 3111 OR ftCode = 3112
+
+# パイプライン
+528 ftCode = 5321
+
+# 階段
+532 ftCode = 2731 OR ftCode = 2732 OR ftCode = 2733
