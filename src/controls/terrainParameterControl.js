@@ -8,7 +8,7 @@ const demSource = new mlcontour.DemSource({
   maxzoom: 15,
   worker: true,
   cacheSize: 100,
-  timeoutMs: 10_000,
+  timeoutMs: 100_000,
 });
 demSource.setupMaplibre(maplibregl);
 
