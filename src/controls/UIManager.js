@@ -1,18 +1,37 @@
 class UIManager {
   constructor() {
     this.container = null;
+    this.controls = [];
   }
 
-  createShowButton() {
-    const showButton = document.createElement("button");
-    showButton.id = "show-button";
-    showButton.innerText = "🏔️";
-    return showButton;
+  createCheckboxControl(id, labelText) {
+    const container = document.createElement("div");
+    container.style.display = "none";
+    container.style.flexDirection = "row";
+    container.style.alignItems = "center";
+    container.style.margin = "4px 0";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = id;
+
+    const label = document.createElement("label");
+    label.htmlFor = id;
+    label.innerText = labelText;
+
+    container.appendChild(checkbox);
+    container.appendChild(label);
+
+    this.controls.push(container);
+    return container;
   }
 
   createInputControl(id, labelText, tooltipText = "", initialValue = "") {
     const container = document.createElement("div");
     container.style.display = "none";
+    container.style.flexDirection = "row";
+    container.style.alignItems = "center";
+    container.style.margin = "4px 0";
     container.id = `${id}-container`;
 
     const label = document.createElement("label");
@@ -28,32 +47,31 @@ class UIManager {
     input.type = "number";
     input.value = initialValue;
     input.style.width = "40px";
+    input.style.marginLeft = "4px";
 
     label.appendChild(tooltipIcon);
     container.appendChild(label);
     container.appendChild(input);
+
+    this.controls.push(container);
     return container;
   }
 
-  createTooltip(text) {
-    const tooltip = document.createElement("span");
-    tooltip.className = "tooltip";
-    tooltip.innerText = text;
-    tooltip.style.display = "none";
-    tooltip.style.position = "absolute";
-    tooltip.style.backgroundColor = "#333";
-    tooltip.style.color = "#fff";
-    tooltip.style.padding = "5px";
-    tooltip.style.borderRadius = "5px";
-    tooltip.style.fontSize = "12px";
-    return tooltip;
+  createShowButton() {
+    const button = document.createElement("button");
+    button.id = "show-button";
+    button.innerText = "🏔️";
+    return button;
   }
 
   createUIElements() {
     this.container = document.createElement("div");
     this.container.className = "maplibregl-ctrl maplibregl-ctrl-group";
+    this.container.style.display = "flex";
+    this.container.style.flexDirection = "column";
 
     const showButton = this.createShowButton();
+    const terrainToggleCheckbox = this.createCheckboxControl("terrain-toggle-checkbox", "3D Terrain");
     const terrainExaggerationControl = this.createInputControl(
       "terrain-exaggeration",
       "3D Exaggeration:",
@@ -68,16 +86,12 @@ class UIManager {
     );
 
     this.container.appendChild(showButton);
-    this.container.appendChild(terrainExaggerationControl);
-    this.container.appendChild(contourIntervalControl);
+    this.container.append(...this.controls);
   }
 
   showHideUI(isVisible) {
-    const inputs = this.container.querySelectorAll("div");
-    const showButton = this.container.querySelector("#show-button");
-
-    inputs.forEach((input) => {
-      input.style.display = isVisible ? "flex" : "none";
+    this.controls.forEach((control) => {
+      control.style.display = isVisible ? "flex" : "none";
     });
   }
 }

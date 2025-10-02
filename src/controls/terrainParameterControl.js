@@ -32,6 +32,7 @@ class terrainParameterControl {
       tiles: [this.demSource.sharedDemProtocolUrl],
       tileSize: 256,
     });
+
     const sky = {
       "sky-color": "#199EF3",
       "sky-horizon-blend": 0.5,
@@ -56,26 +57,16 @@ class terrainParameterControl {
 
   updateTerrainExaggeration() {
     const exaggeration = parseFloat(this.terrainExaggeration);
-    if (isNaN(exaggeration) || exaggeration <= 0) {
-      return;
-    }
+    if (isNaN(exaggeration) || exaggeration <= 0) return;
+
     this.map.setTerrain({
       source: "terrain",
-      exaggeration: parseFloat(exaggeration),
+      exaggeration: exaggeration,
     });
   }
 
-  toggleTerrain = () => {
-    if (this.map.getTerrain()) {
-      this.map.setTerrain(null);
-    } else {
-      this.updateTerrainExaggeration();
-    }
-  };
-
   generateContourTiles() {
     const thresholds = {};
-
     const baseInterval = this.contourInterval;
 
     for (let zoomLevel = 14; zoomLevel >= 0; zoomLevel--) {
@@ -84,7 +75,7 @@ class terrainParameterControl {
     }
 
     return this.demSource.contourProtocolUrl({
-      thresholds: thresholds,
+      thresholds,
       contourLayer: "contours",
       elevationKey: "ele",
       levelKey: "level",
@@ -94,12 +85,28 @@ class terrainParameterControl {
   }
 
   updateContourInterval() {
-    this.contourIntervalInput = parseFloat(this.contourInterval);
-    const style = this.map.getStyle();
-    if (style.sources["contour-source"]) {
-      style.sources["contour-source"].tiles = [this.generateContourTiles()];
-      this.map.setStyle(style);
+    const contourSource = this.map.getSource("contour-source");
+    if (contourSource) {
+      contourSource.setTiles([this.generateContourTiles()]);
     }
+  }
+
+  setupTerrainToggleSync() {
+    const terrainCheckbox = this.container.querySelector("#terrain-toggle-checkbox");
+    const exaggerationInput = this.container.querySelector("#terrain-exaggeration-input");
+
+    terrainCheckbox.addEventListener("change", (e) => {
+      if (e.target.checked) this.updateTerrainExaggeration();
+      else this.map.setTerrain(null);
+    });
+
+    exaggerationInput.addEventListener("input", (e) => {
+      const val = parseFloat(e.target.value);
+      if (isNaN(val) || val <= 0) return;
+
+      if (!terrainCheckbox.checked) terrainCheckbox.checked = true;
+      this.updateTerrainExaggeration();
+    });
   }
 
   attachEventListeners() {
@@ -121,7 +128,6 @@ class terrainParameterControl {
     this.eventManager.addClickListener(
       this.container.querySelector("#show-button"),
       () => {
-        this.toggleTerrain();
         this.uiManager.showHideUI(true);
 
         if (!this.isOutsideClickListenerActive) {
@@ -134,18 +140,18 @@ class terrainParameterControl {
       }
     );
 
-    inputConfig.forEach(
-      ({ elementId, property, updateMethod, tooltipElementId }) => {
-        const inputElement = this.container.querySelector(elementId);
-        const tooltipElement = this.container.querySelector(tooltipElementId);
+    inputConfig.forEach(({ elementId, property, updateMethod, tooltipElementId }) => {
+      const inputElement = this.container.querySelector(elementId);
+      const tooltipElement = this.container.querySelector(tooltipElementId);
 
-        this.eventManager.addInputListener(inputElement, (value) => {
-          this[property] = value;
-          updateMethod();
-        });
-        this.eventManager.addTooltipListeners(inputElement, tooltipElement);
-      }
-    );
+      this.eventManager.addInputListener(inputElement, (value) => {
+        this[property] = value;
+        updateMethod();
+      });
+      this.eventManager.addTooltipListeners(inputElement, tooltipElement);
+    });
+
+    this.setupTerrainToggleSync();
   }
 
   createUI() {
