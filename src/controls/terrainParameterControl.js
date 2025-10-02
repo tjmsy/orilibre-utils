@@ -1,19 +1,21 @@
 import UIManager from "./UIManager.js";
 import EventManager from "./EventManager.js";
 
-const demSource = new mlcontour.DemSource({
-  url: "https://gbank.gsj.jp/seamless/elev/terrainRGB/mixed/{z}/{y}/{x}.png",
-  encoding: "mapbox",
-  minzoom: 0,
-  maxzoom: 15,
-  worker: true,
-  cacheSize: 100,
-  timeoutMs: 100_000,
-});
-demSource.setupMaplibre(maplibregl);
-
 class terrainParameterControl {
-  constructor() {
+  constructor(demSource) {
+    this.demSource =
+      demSource ||
+      new mlcontour.DemSource({
+        url: "https://gbank.gsj.jp/seamless/elev/terrainRGB/mixed/{z}/{y}/{x}.png",
+        encoding: "mapbox",
+        minzoom: 0,
+        maxzoom: 17,
+        worker: true,
+        cacheSize: 100,
+        timeoutMs: 100_000,
+      });
+    this.demSource.setupMaplibre(maplibregl);
+
     this.map = null;
     this.container = null;
     this.uiManager = new UIManager();
@@ -22,7 +24,6 @@ class terrainParameterControl {
     this.terrainExaggeration = 1;
     this.contourInterval = 5;
     this.isOutsideClickListenerActive = false;
-    this.demSource = demSource;
   }
 
   initializeTerrain() {
