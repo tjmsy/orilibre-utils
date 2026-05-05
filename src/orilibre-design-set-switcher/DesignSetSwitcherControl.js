@@ -30,7 +30,10 @@ class DesignSetSwitcherControl {
         label: "OSM(Shortbread)",
         url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/shortbread/project-config.yml",
         forestLayer: "405-forest-shortbread-land",
-        outOfBoundsLayer: "520-out-of-bounds-shortbread-sites",
+        outOfBoundsLayer: [
+          "520-out-of-bounds-shortbread-sites",
+          "520-out-of-bounds-shortbread-land-1",
+        ],
         parkLayer: "park-shortbread-land",
         managedSources: ["shortbread"],
         managedImages: [
@@ -42,7 +45,7 @@ class DesignSetSwitcherControl {
         ],
       },
       "hybrid-japan": {
-        label: "Hybrid(japan)",
+        label: "Hybrid Japan",
         url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/isomized-japan/project-config.yml",
         forestLayer: "405-forest-ofm-landcover",
         outOfBoundsLayer: "520-out-of-bounds-ofm-landuse",
@@ -236,12 +239,19 @@ class DesignSetSwitcherControl {
     const designSet = this.designSets[this.currentDesignSet];
     if (!designSet) return;
 
-    const { forestLayer, outOfBoundsLayer } = designSet;
+    const { forestLayer, outOfBoundsLayer, parkLayer } = designSet;
 
-    if (
-      !this.map.getLayer(forestLayer) ||
-      !this.map.getLayer(outOfBoundsLayer)
-    ) {
+    const outOfBoundsLayers = Array.isArray(outOfBoundsLayer)
+      ? outOfBoundsLayer
+      : [outOfBoundsLayer];
+
+    const forestReady = this.map.getLayer(forestLayer);
+    const outOfBoundsReady = outOfBoundsLayers.every((l) =>
+      this.map.getLayer(l),
+    );
+    const parkReady = this.map.getLayer(parkLayer);
+
+    if (!forestReady || !outOfBoundsReady || !parkReady) {
       if (retry > 60) return;
       requestAnimationFrame(() => this._applyStyleSafe(retry + 1));
       return;
@@ -254,8 +264,13 @@ class DesignSetSwitcherControl {
 
   _applyBackground(bg) {
     this.currentBackgroundColor = bg;
+
     const designSet = this.designSets[this.currentDesignSet];
-    const layer = designSet.outOfBoundsLayer;
+    if (!designSet) return;
+
+    const layers = Array.isArray(designSet.outOfBoundsLayer)
+      ? designSet.outOfBoundsLayer
+      : [designSet.outOfBoundsLayer];
 
     const color = bg === "green" ? "#9BBB1D" : "#ffffff";
 
@@ -263,9 +278,11 @@ class DesignSetSwitcherControl {
       this.map.setPaintProperty("background", "background-color", color);
     }
 
-    if (this.map.getLayer(layer)) {
-      this.map.setPaintProperty(layer, "fill-color", color);
-    }
+    layers.forEach((layer) => {
+      if (this.map.getLayer(layer)) {
+        this.map.setPaintProperty(layer, "fill-color", color);
+      }
+    });
   }
 
   _applyForest(style) {
