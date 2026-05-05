@@ -6,6 +6,7 @@ class DesignSetSwitcherControl {
       defaultDesignSet: "ofm",
       defaultBackgroundColor: "green",
       defaultForestColor: "white",
+      defaultParkColor: "white",
       ...options,
     };
 
@@ -15,6 +16,7 @@ class DesignSetSwitcherControl {
         url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/global/project-config.yml",
         forestLayer: "405-forest-ofm-landcover",
         outOfBoundsLayer: "520-out-of-bounds-ofm-landuse",
+        parkLayer: "park-ofm-landcover",
         managedSources: ["ofm"],
         managedImages: [
           "cultivated-land-pattern",
@@ -29,6 +31,7 @@ class DesignSetSwitcherControl {
         url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/shortbread/project-config.yml",
         forestLayer: "405-forest-shortbread-land",
         outOfBoundsLayer: "520-out-of-bounds-shortbread-sites",
+        parkLayer: "park-shortbread-land",
         managedSources: ["shortbread"],
         managedImages: [
           "cultivated-land-pattern",
@@ -43,6 +46,7 @@ class DesignSetSwitcherControl {
         url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/isomized-japan/project-config.yml",
         forestLayer: "405-forest-ofm-landcover",
         outOfBoundsLayer: "520-out-of-bounds-ofm-landuse",
+        parkLayer: "park-ofm-landcover",
         managedSources: ["ofm", "gsivt", "fude"],
         managedImages: [
           "cultivated-land-pattern",
@@ -59,6 +63,7 @@ class DesignSetSwitcherControl {
     this.currentDesignSet = this.options.defaultDesignSet;
     this.currentBackgroundColor = this.options.defaultBackgroundColor;
     this.currentForestColor = this.options.defaultForestColor;
+    this.currentParkColor = this.options.defaultParkColor;
 
     // DOM refs
     this.container = null;
@@ -73,6 +78,7 @@ class DesignSetSwitcherControl {
     this._onDesignSetChange = this._onDesignSetChange.bind(this);
     this._onBackgroundChange = this._onBackgroundChange.bind(this);
     this._onForestChange = this._onForestChange.bind(this);
+    this._onParkChange = this._onParkChange.bind(this);
   }
 
   // -------------------------
@@ -140,6 +146,7 @@ class DesignSetSwitcherControl {
       this._onBackgroundChange,
     );
     this.radioGroupForest.addEventListener("change", this._onForestChange);
+    this.radioGroupPark.addEventListener("change", this._onParkChange);
   }
 
   _unbindUIEvents() {
@@ -153,6 +160,7 @@ class DesignSetSwitcherControl {
       this._onBackgroundChange,
     );
     this.radioGroupForest.removeEventListener("change", this._onForestChange);
+    this.radioGroupPark.removeEventListener("change", this._onParkChange);
     document.removeEventListener("click", this._onDocumentClick);
   }
 
@@ -179,6 +187,10 @@ class DesignSetSwitcherControl {
 
   _onForestChange(e) {
     this._applyForest(e.target.value);
+  }
+
+  _onParkChange(e) {
+    this._applyPark(e.target.value);
   }
 
   // -------------------------
@@ -237,6 +249,7 @@ class DesignSetSwitcherControl {
 
     this._applyBackground(this.currentBackgroundColor);
     this._applyForest(this.currentForestColor);
+    this._applyPark(this.currentParkColor);
   }
 
   _applyBackground(bg) {
@@ -269,6 +282,20 @@ class DesignSetSwitcherControl {
     this.map.setPaintProperty(layer, "fill-color", color);
   }
 
+  _applyPark(style) {
+    this.currentParkColor = style;
+
+    const designSet = this.designSets[this.currentDesignSet];
+    if (!designSet) return;
+
+    const layer = designSet.parkLayer;
+    if (!this.map.getLayer(layer)) return;
+
+    const color = style === "white" ? "#ffffff" : "#FFBA35";
+
+    this.map.setPaintProperty(layer, "fill-color", color);
+  }
+
   // -------------------------
   // UI
   // -------------------------
@@ -284,6 +311,8 @@ class DesignSetSwitcherControl {
     this._createRadioGroupBackground();
     this._createTextLabelForest();
     this._createRadioGroupForest();
+    this._createTextLabelPark();
+    this._createRadioGroupPark();
     this._assemble();
   }
 
@@ -297,6 +326,8 @@ class DesignSetSwitcherControl {
     this.panel.appendChild(this.radioGroupBackground);
     this.panel.appendChild(this.textLabelForest);
     this.panel.appendChild(this.radioGroupForest);
+    this.panel.appendChild(this.textLabelPark);
+    this.panel.appendChild(this.radioGroupPark);
   }
 
   // -------------------------
@@ -341,6 +372,12 @@ class DesignSetSwitcherControl {
     this.textLabelForest.style.display = "block";
   }
 
+  _createTextLabelPark() {
+    this.textLabelPark = document.createElement("label");
+    this.textLabelPark.innerText = "Park Color";
+    this.textLabelPark.style.display = "block";
+  }
+
   _createRadioGroupDesignSet() {
     this.radioGroupDesignSet = this._createRadioGroup(
       [
@@ -368,10 +405,21 @@ class DesignSetSwitcherControl {
     this.radioGroupForest = this._createRadioGroup(
       [
         { key: "white", label: "white" },
-        { key: "light-green", label: "light-green" },
+        { key: "pale-green", label: "pale-green" },
       ],
       "designSet-forest",
       this.currentForestColor,
+    );
+  }
+
+  _createRadioGroupPark() {
+    this.radioGroupPark = this._createRadioGroup(
+      [
+        { key: "white", label: "white" },
+        { key: "yellow", label: "yellow" },
+      ],
+      "designSet-park",
+      this.currentParkColor,
     );
   }
 
