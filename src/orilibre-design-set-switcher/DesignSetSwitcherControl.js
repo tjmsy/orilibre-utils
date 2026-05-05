@@ -14,6 +14,7 @@ class DesignSetSwitcherControl {
         label: "OSM(OpenMapTiles)",
         url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/global/project-config.yml",
         forestLayer: "405-forest-ofm-landcover",
+        outOfBoundsLayer: "520-out-of-bounds-ofm-landuse",
         managedSources: ["ofm"],
         managedImages: [
           "cultivated-land-pattern",
@@ -27,6 +28,7 @@ class DesignSetSwitcherControl {
         label: "OSM(Shortbread)",
         url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/shortbread/project-config.yml",
         forestLayer: "405-forest-shortbread-land",
+        outOfBoundsLayer: "520-out-of-bounds-shortbread-sites",
         managedSources: ["shortbread"],
         managedImages: [
           "cultivated-land-pattern",
@@ -40,6 +42,7 @@ class DesignSetSwitcherControl {
         label: "Hybrid(japan)",
         url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/isomized-japan/project-config.yml",
         forestLayer: "405-forest-ofm-landcover",
+        outOfBoundsLayer: "520-out-of-bounds-ofm-landuse",
         managedSources: ["ofm", "gsivt", "fude"],
         managedImages: [
           "cultivated-land-pattern",
@@ -128,7 +131,10 @@ class DesignSetSwitcherControl {
 
   _bindUIEvents() {
     this.toggleButton.addEventListener("click", this._onToggle);
-    this.radioGroupDesignSet.addEventListener("change", this._onDesignSetChange);
+    this.radioGroupDesignSet.addEventListener(
+      "change",
+      this._onDesignSetChange,
+    );
     this.radioGroupBackground.addEventListener(
       "change",
       this._onBackgroundChange,
@@ -138,7 +144,10 @@ class DesignSetSwitcherControl {
 
   _unbindUIEvents() {
     this.toggleButton?.removeEventListener("click", this._onToggle);
-    this.radioGroupDesignSet.removeEventListener("change", this._onDesignSetChange);
+    this.radioGroupDesignSet.removeEventListener(
+      "change",
+      this._onDesignSetChange,
+    );
     this.radioGroupBackground.removeEventListener(
       "change",
       this._onBackgroundChange,
@@ -215,7 +224,12 @@ class DesignSetSwitcherControl {
     const designSet = this.designSets[this.currentDesignSet];
     if (!designSet) return;
 
-    if (!this.map.getLayer(designSet.forestLayer)) {
+    const { forestLayer, outOfBoundsLayer } = designSet;
+
+    if (
+      !this.map.getLayer(forestLayer) ||
+      !this.map.getLayer(outOfBoundsLayer)
+    ) {
       if (retry > 60) return;
       requestAnimationFrame(() => this._applyStyleSafe(retry + 1));
       return;
@@ -227,12 +241,18 @@ class DesignSetSwitcherControl {
 
   _applyBackground(bg) {
     this.currentBackgroundColor = bg;
-
-    if (!this.map.getLayer("background")) return;
+    const designSet = this.designSets[this.currentDesignSet];
+    const layer = designSet.outOfBoundsLayer;
 
     const color = bg === "green" ? "#9BBB1D" : "#ffffff";
 
-    this.map.setPaintProperty("background", "background-color", color);
+    if (this.map.getLayer("background")) {
+      this.map.setPaintProperty("background", "background-color", color);
+    }
+
+    if (this.map.getLayer(layer)) {
+      this.map.setPaintProperty(layer, "fill-color", color);
+    }
   }
 
   _applyForest(style) {
