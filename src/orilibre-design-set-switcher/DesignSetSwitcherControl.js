@@ -290,7 +290,7 @@ class DesignSetSwitcherControl {
 
   _createToggleButton() {
     this.toggleButton = document.createElement("button");
-    this.toggleButton.textContent = "🔄";
+    this.toggleButton.textContent = "⚙️";
   }
 
   _createPanel() {
