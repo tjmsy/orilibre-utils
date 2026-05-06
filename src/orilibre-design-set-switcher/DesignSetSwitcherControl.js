@@ -12,7 +12,7 @@ class DesignSetSwitcherControl {
 
     this.designSets = {
       ofm: {
-        label: "OSM(OpenMapTiles)",
+        label: "OpenMapTiles",
         url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/global/project-config.yml",
         forestLayer: "405-forest-ofm-landcover",
         outOfBoundsLayer: "520-out-of-bounds-ofm-landuse",
@@ -27,7 +27,7 @@ class DesignSetSwitcherControl {
         ],
       },
       shortbread: {
-        label: "OSM(Shortbread)",
+        label: "Shortbread",
         url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/shortbread/project-config.yml",
         forestLayer: "405-forest-shortbread-land",
         outOfBoundsLayer: [
@@ -45,7 +45,7 @@ class DesignSetSwitcherControl {
         ],
       },
       "hybrid-japan": {
-        label: "Hybrid Japan",
+        label: "GSI Hybrid Japan",
         url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/isomized-japan/project-config.yml",
         forestLayer: "405-forest-ofm-landcover",
         outOfBoundsLayer: "520-out-of-bounds-ofm-landuse",
@@ -398,9 +398,9 @@ class DesignSetSwitcherControl {
   _createRadioGroupDesignSet() {
     this.radioGroupDesignSet = this._createRadioGroup(
       [
-        { key: "ofm", label: "OSM(OpenMapTiles)" },
-        { key: "shortbread", label: "OSM(Shortbread)" },
-        { key: "hybrid-japan", label: "Hybrid(japan)" },
+        { key: "ofm", label: "OpenMapTiles" },
+        { key: "shortbread", label: "Shortbread" },
+        { key: "hybrid-japan", label: "GSI Hybrid Japan" },
       ],
       "designSets",
       this.currentDesignSet,
