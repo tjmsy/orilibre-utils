@@ -439,7 +439,7 @@ class DesignSetSwitcherControl {
 
   _createTextLabelTextOverlay() {
     this.textLabelTextOverlay = document.createElement("label");
-    this.textLabelTextOverlay.innerText = "Symbol Text";
+    this.textLabelTextOverlay.innerText = "Place Labels";
     this.textLabelTextOverlay.style.display = "block";
   }
 
