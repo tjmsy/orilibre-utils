@@ -1,4 +1,4 @@
-import { isomizer } from "https://cdn.jsdelivr.net/gh/tjmsy/maplibre-gl-isomizer@0.4/src/isomizer.js";
+import { isomizer } from "https://cdn.jsdelivr.net/gh/tjmsy/maplibre-gl-isomizer@0.5/src/isomizer.js";
 
 class DesignSetSwitcherControl {
   constructor(options = {}) {
@@ -17,14 +17,6 @@ class DesignSetSwitcherControl {
         forestLayer: "405-forest-ofm-landcover",
         outOfBoundsLayer: "520-out-of-bounds-ofm-landuse",
         parkLayer: "park-ofm-landcover",
-        managedSources: ["ofm"],
-        managedImages: [
-          "cultivated-land-pattern",
-          "sandy-ground-pattern",
-          "boulder-field-pattern",
-          "marsh-pattern",
-          "orchard-pattern",
-        ],
       },
       shortbread: {
         label: "Shortbread",
@@ -35,14 +27,6 @@ class DesignSetSwitcherControl {
           "520-out-of-bounds-shortbread-land-1",
         ],
         parkLayer: "park-shortbread-land",
-        managedSources: ["shortbread"],
-        managedImages: [
-          "cultivated-land-pattern",
-          "sandy-ground-pattern",
-          "boulder-field-pattern",
-          "marsh-pattern",
-          "orchard-pattern",
-        ],
       },
       "hybrid-japan": {
         label: "GSI Hybrid Japan",
@@ -50,16 +34,10 @@ class DesignSetSwitcherControl {
         forestLayer: "405-forest-ofm-landcover",
         outOfBoundsLayer: "520-out-of-bounds-ofm-landuse",
         parkLayer: "park-ofm-landcover",
-        managedSources: ["ofm", "gsivt", "fude"],
-        managedImages: [
-          "cultivated-land-pattern",
-          "sandy-ground-pattern",
-          "boulder-field-pattern",
-          "marsh-pattern",
-          "orchard-pattern",
-        ],
       },
     };
+
+    this.designSetHandles = {};
 
     // state
     this.isOpen = false;
@@ -67,6 +45,7 @@ class DesignSetSwitcherControl {
     this.currentBackgroundColor = this.options.defaultBackgroundColor;
     this.currentForestColor = this.options.defaultForestColor;
     this.currentParkColor = this.options.defaultParkColor;
+    this._designSetRequestId = 0;
 
     // DOM refs
     this.container = null;
@@ -171,15 +150,24 @@ class DesignSetSwitcherControl {
   // Handlers
   // -------------------------
 
-  _onDesignSetChange(e) {
+  async _onDesignSetChange(e) {
     const next = e.target.value;
     if (next === this.currentDesignSet) return;
+
+    const requestId = ++this._designSetRequestId;
 
     this._resetMap(this.currentDesignSet);
 
     this.currentDesignSet = next;
 
-    isomizer(this.map, this.designSets[next].url);
+    const handle = await isomizer(this.map, this.designSets[next].url);
+
+    if (requestId !== this._designSetRequestId) {
+      this._resetMapFromHandle(handle); // ←追加
+      return;
+    }
+
+    this.designSetHandles[next] = handle;
 
     this._applyStyleSafe();
   }
@@ -201,34 +189,31 @@ class DesignSetSwitcherControl {
   // -------------------------
 
   _resetMap(projectKey) {
-    const style = this.map.getStyle();
-    if (!style) return;
+    const handle = this.designSetHandles[projectKey];
+    if (!handle) return;
 
-    const layers = style.layers || [];
-    const designSet = this.designSets[projectKey];
-    if (!designSet) return;
+    this._resetMapFromHandle(handle);
+    delete this.designSetHandles[projectKey];
+  }
 
-    const removeLayerIds = [];
+  _resetMapFromHandle(handle) {
+    if (!handle) return;
 
-    layers.forEach((layer) => {
-      if (layer.metadata?.["isomizer:project"] === projectKey) {
-        removeLayerIds.push(layer.id);
-      }
-    });
+    const { layers = [], sources = [], images = [] } = handle;
 
-    [...removeLayerIds].reverse().forEach((id) => {
+    [...layers].reverse().forEach((id) => {
       if (this.map.getLayer(id)) {
         this.map.removeLayer(id);
       }
     });
 
-    (designSet.managedSources || []).forEach((id) => {
+    sources.forEach((id) => {
       if (this.map.getSource(id)) {
         this.map.removeSource(id);
       }
     });
 
-    (designSet.managedImages || []).forEach((id) => {
+    images.forEach((id) => {
       if (this.map.hasImage(id)) {
         this.map.removeImage(id);
       }
