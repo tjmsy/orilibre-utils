@@ -37,7 +37,14 @@ class DesignSetSwitcherControl {
       },
     };
 
+    this.textOverlays = {
+      ja: {
+        url: "https://gist.githubusercontent.com/tjmsy/885c9827d644fbbe09055ba96db208b6/raw/c302ce96dc6070800566fb8cb157f16b1a95a881/project-config.yml",
+      },
+    };
+
     this.designSetHandles = {};
+    this.overlayHandle = null;
 
     // state
     this.isOpen = false;
@@ -46,6 +53,7 @@ class DesignSetSwitcherControl {
     this.currentForestColor = this.options.defaultForestColor;
     this.currentParkColor = this.options.defaultParkColor;
     this._designSetRequestId = 0;
+    this.currentTextOverlay = "none";
 
     // DOM refs
     this.container = null;
@@ -61,6 +69,7 @@ class DesignSetSwitcherControl {
     this._onBackgroundChange = this._onBackgroundChange.bind(this);
     this._onForestChange = this._onForestChange.bind(this);
     this._onParkChange = this._onParkChange.bind(this);
+    this._onTextOverlayChange = this._onTextOverlayChange.bind(this);
   }
 
   // -------------------------
@@ -129,6 +138,10 @@ class DesignSetSwitcherControl {
     );
     this.radioGroupForest.addEventListener("change", this._onForestChange);
     this.radioGroupPark.addEventListener("change", this._onParkChange);
+    this.radioGroupTextOverlay.addEventListener(
+      "change",
+      this._onTextOverlayChange,
+    );
   }
 
   _unbindUIEvents() {
@@ -143,6 +156,10 @@ class DesignSetSwitcherControl {
     );
     this.radioGroupForest.removeEventListener("change", this._onForestChange);
     this.radioGroupPark.removeEventListener("change", this._onParkChange);
+    this.radioGroupTextOverlay?.removeEventListener(
+      "change",
+      this._onTextOverlayChange,
+    );
     document.removeEventListener("click", this._onDocumentClick);
   }
 
@@ -163,11 +180,13 @@ class DesignSetSwitcherControl {
     const handle = await isomizer(this.map, this.designSets[next].url);
 
     if (requestId !== this._designSetRequestId) {
-      this._resetMapFromHandle(handle); // ←追加
+      this._resetMapFromHandle(handle);
       return;
     }
 
     this.designSetHandles[next] = handle;
+
+    this._bringOverlayToFront();
 
     this._applyStyleSafe();
   }
@@ -182,6 +201,36 @@ class DesignSetSwitcherControl {
 
   _onParkChange(e) {
     this._applyPark(e.target.value);
+  }
+
+  async _onTextOverlayChange(e) {
+    const next = e.target.value;
+    if (next === this.currentTextOverlay) return;
+
+    if (this.overlayHandle) {
+      this._resetMapFromHandle(this.overlayHandle);
+      this.overlayHandle = null;
+    }
+
+    this.currentTextOverlay = next;
+
+    if (next === "none") return;
+
+    const config = this.textOverlays[next];
+    if (!config) return;
+
+    try {
+      const handle = await isomizer(this.map, config.url);
+
+      if (this.currentTextOverlay !== next) {
+        this._resetMapFromHandle(handle);
+        return;
+      }
+
+      this.overlayHandle = handle;
+    } catch (e) {
+      console.error("Failed to load text overlay:", e);
+    }
   }
 
   // -------------------------
@@ -199,7 +248,7 @@ class DesignSetSwitcherControl {
   _resetMapFromHandle(handle) {
     if (!handle) return;
 
-    const { layers = [], sources = [], images = [] } = handle;
+    const { layers = [], images = [] } = handle;
 
     [...layers].reverse().forEach((id) => {
       if (this.map.getLayer(id)) {
@@ -207,15 +256,19 @@ class DesignSetSwitcherControl {
       }
     });
 
-    sources.forEach((id) => {
-      if (this.map.getSource(id)) {
-        this.map.removeSource(id);
-      }
-    });
-
     images.forEach((id) => {
       if (this.map.hasImage(id)) {
         this.map.removeImage(id);
+      }
+    });
+  }
+
+  _bringOverlayToFront() {
+    if (!this.overlayHandle?.layers) return;
+
+    this.overlayHandle.layers.forEach((id) => {
+      if (this.map.getLayer(id)) {
+        this.map.moveLayer(id);
       }
     });
   }
@@ -315,6 +368,8 @@ class DesignSetSwitcherControl {
     this._createRadioGroupForest();
     this._createTextLabelPark();
     this._createRadioGroupPark();
+    this._createTextLabelTextOverlay();
+    this._createRadioGroupTextOverlay();
     this._assemble();
   }
 
@@ -330,6 +385,8 @@ class DesignSetSwitcherControl {
     this.panel.appendChild(this.radioGroupForest);
     this.panel.appendChild(this.textLabelPark);
     this.panel.appendChild(this.radioGroupPark);
+    this.panel.appendChild(this.textLabelTextOverlay);
+    this.panel.appendChild(this.radioGroupTextOverlay);
   }
 
   // -------------------------
@@ -378,6 +435,12 @@ class DesignSetSwitcherControl {
     this.textLabelPark = document.createElement("label");
     this.textLabelPark.innerText = "Park Color";
     this.textLabelPark.style.display = "block";
+  }
+
+  _createTextLabelTextOverlay() {
+    this.textLabelTextOverlay = document.createElement("label");
+    this.textLabelTextOverlay.innerText = "Symbol Text";
+    this.textLabelTextOverlay.style.display = "block";
   }
 
   _createRadioGroupDesignSet() {
@@ -444,6 +507,17 @@ class DesignSetSwitcherControl {
     });
 
     return group;
+  }
+
+  _createRadioGroupTextOverlay() {
+    this.radioGroupTextOverlay = this._createRadioGroup(
+      [
+        { key: "none", label: "none" },
+        { key: "ja", label: "ja" },
+      ],
+      "designSet-text-overlay",
+      this.currentTextOverlay,
+    );
   }
 }
 
