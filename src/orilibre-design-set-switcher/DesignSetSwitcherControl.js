@@ -7,33 +7,37 @@ class DesignSetSwitcherControl {
       defaultBackgroundColor: "green",
       defaultForestColor: "white",
       defaultParkColor: "white",
+      defaultHillshade: false,
       ...options,
     };
 
     this.designSets = {
       ofm: {
         label: "OpenMapTiles",
-        url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/global/project-config.yml",
+        url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.5/projects/global/project-config.yml",
         forestLayer: "405-forest-ofm-landcover",
         outOfBoundsLayer: "520-out-of-bounds-ofm-landuse",
         parkLayer: "park-ofm-landcover",
+        hillshadeLayer: "hillshade",
       },
       shortbread: {
         label: "Shortbread",
-        url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/shortbread/project-config.yml",
+        url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.5/projects/shortbread/project-config.yml",
         forestLayer: "405-forest-shortbread-land",
         outOfBoundsLayer: [
           "520-out-of-bounds-shortbread-sites",
           "520-out-of-bounds-shortbread-land-1",
         ],
         parkLayer: "park-shortbread-land",
+        hillshadeLayer: "hillshade",
       },
       "hybrid-japan": {
         label: "GSI Hybrid Japan",
-        url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/projects/isomized-japan/project-config.yml",
+        url: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.5/projects/isomized-japan/project-config.yml",
         forestLayer: "405-forest-ofm-landcover",
         outOfBoundsLayer: "520-out-of-bounds-ofm-landuse",
         parkLayer: "park-ofm-landcover",
+        hillshadeLayer: "hillshade",
       },
     };
 
@@ -54,6 +58,7 @@ class DesignSetSwitcherControl {
     this.currentParkColor = this.options.defaultParkColor;
     this._designSetRequestId = 0;
     this.currentTextOverlay = "none";
+    this.currentHillshade = this.options.defaultHillshade;
 
     // DOM refs
     this.container = null;
@@ -233,6 +238,11 @@ class DesignSetSwitcherControl {
     }
   }
 
+  _onHillshadeChange(e) {
+    this.currentHillshade = e.target.checked;
+    this._applyHillshade();
+  }
+
   // -------------------------
   // Core logic
   // -------------------------
@@ -298,6 +308,7 @@ class DesignSetSwitcherControl {
     this._applyBackground(this.currentBackgroundColor);
     this._applyForest(this.currentForestColor);
     this._applyPark(this.currentParkColor);
+    this._applyHillshade(this.currentParkColor);
   }
 
   _applyBackground(bg) {
@@ -351,6 +362,20 @@ class DesignSetSwitcherControl {
     this.map.setPaintProperty(layer, "fill-color", color);
   }
 
+  _applyHillshade() {
+    const designSet = this.designSets[this.currentDesignSet];
+    if (!designSet) return;
+
+    const layer = designSet.hillshadeLayer;
+    if (!this.map.getLayer(layer)) return;
+
+    this.map.setLayoutProperty(
+      layer,
+      "visibility",
+      this.currentHillshade ? "visible" : "none",
+    );
+  }
+
   // -------------------------
   // UI
   // -------------------------
@@ -370,6 +395,8 @@ class DesignSetSwitcherControl {
     this._createRadioGroupPark();
     this._createTextLabelTextOverlay();
     this._createRadioGroupTextOverlay();
+    this._createTextLabelHillshade();
+    this._createHillshadeToggle();
     this._assemble();
   }
 
@@ -387,6 +414,8 @@ class DesignSetSwitcherControl {
     this.panel.appendChild(this.radioGroupPark);
     this.panel.appendChild(this.textLabelTextOverlay);
     this.panel.appendChild(this.radioGroupTextOverlay);
+    this.panel.appendChild(this.textLabelHillshade);
+    this.panel.appendChild(this.hillshadeToggle);
   }
 
   // -------------------------
@@ -441,6 +470,12 @@ class DesignSetSwitcherControl {
     this.textLabelTextOverlay = document.createElement("label");
     this.textLabelTextOverlay.innerText = "Place Labels";
     this.textLabelTextOverlay.style.display = "block";
+  }
+
+  _createTextLabelHillshade() {
+    this.textLabelHillshade = document.createElement("label");
+    this.textLabelHillshade.innerText = "Hillshade";
+    this.textLabelHillshade.style.display = "block";
   }
 
   _createRadioGroupDesignSet() {
@@ -505,7 +540,6 @@ class DesignSetSwitcherControl {
 
       group.appendChild(label);
     });
-
     return group;
   }
 
@@ -518,6 +552,27 @@ class DesignSetSwitcherControl {
       "designSet-text-overlay",
       this.currentTextOverlay,
     );
+  }
+
+  _createHillshadeToggle() {
+    const group = document.createElement("div");
+
+    const label = document.createElement("label");
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = this.currentHillshade;
+
+    input.addEventListener("change", (e) => {
+      this._onHillshadeChange(e);
+    });
+
+    label.appendChild(input);
+    label.append(" show");
+
+    group.appendChild(label);
+
+    this.hillshadeToggle = group;
   }
 }
 
