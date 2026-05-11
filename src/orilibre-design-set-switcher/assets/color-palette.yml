@@ -1,0 +1,4 @@
+color-palette:
+  - overlay:
+      - placeholder_text:
+          description: "placeholder for sorting"

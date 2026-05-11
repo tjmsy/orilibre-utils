@@ -1,0 +1,19 @@
+project:
+  id: "symbol-text-overlay"
+  name: "symbol-text-overlay"
+  description: "symbol-text-overlay"
+map:
+  center: [0, 0]
+  zoom: 1
+  bearing: 0
+  pitch: 0
+  glyphs: https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf
+resources:
+  design-plan:
+    file: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.2/src/orilibre-design-set-switcher/assets/design-plan.yml"
+  symbol-palette:
+    file: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.2/src/orilibre-design-set-switcher/assets/symbol-palette-en.yml"
+  color-palette:
+    file: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.2/src/orilibre-design-set-switcher/assets/color-palette.yml"
+  image-palette:
+    file: "https://cdn.jsdelivr.net/gh/tjmsy/isomizer-projectfiles@0.4/palettes/isom2017/image-palette.yml"

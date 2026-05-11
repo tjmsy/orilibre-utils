@@ -1,0 +1,466 @@
+symbol-palette:
+  - symbol_id: waterway-name
+    type: symbol
+    layout:
+      symbol-placement: line
+      symbol-spacing: 350
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Italic
+      text-letter-spacing: 0.2
+      text-max-width: 5
+      text-rotation-alignment: map
+      text-size: 14
+    paint:
+      text-color: "#333"
+      text-halo-color: rgba(255,255,255,0.7)
+      text-halo-width: 2
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: water-name-lakeline
+    type: symbol
+    layout:
+      symbol-placement: line
+      symbol-spacing: 350
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Italic
+      text-letter-spacing: 0.2
+      text-max-width: 5
+      text-rotation-alignment: map
+      text-size: 14
+    paint:
+      text-color: "#74aee9"
+      text-halo-color: rgba(255,255,255,0.7)
+      text-halo-width: 1.5
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: water-name-ocean
+    type: symbol
+    layout:
+      symbol-placement: point
+      symbol-spacing: 350
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Italic
+      text-letter-spacing: 0.2
+      text-max-width: 5
+      text-rotation-alignment: map
+      text-size: 14
+    paint:
+      text-color: "#333"
+      text-halo-color: rgba(255,255,255,0.7)
+      text-halo-width: 1
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: water-name-other
+    type: symbol
+    layout:
+      symbol-placement: point
+      symbol-spacing: 350
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Italic
+      text-letter-spacing: 0.2
+      text-max-width: 5
+      text-rotation-alignment: map
+      text-size:
+        stops:
+          - - 0
+            - 10
+          - - 6
+            - 14
+      visibility: visible
+    paint:
+      text-color: "#74aee9"
+      text-halo-color: rgba(255,255,255,0.7)
+      text-halo-width: 1.5
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: poi-park
+    type: symbol
+    minzoom: 12
+    layout:
+      icon-image: ofm_sprite:park
+      icon-size: 0.8
+      text-anchor: top
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Regular
+      text-max-width: 9
+      text-offset:
+        - 0
+        - 0.9
+      text-size: 12
+    paint:
+      text-color: "#333"
+      text-halo-blur: 0.5
+      text-halo-color: '#ffffff'
+      text-halo-width: 1.2
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: poi-railway
+    type: symbol
+    minzoom: 12
+    layout:
+      icon-image: ofm_sprite:railway
+      icon-size: 0.7
+      text-anchor: top
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Bold
+      text-max-width: 9
+      text-offset:
+        - 0
+        - 0.6
+      text-size: 12
+    paint:
+      text-color: "#222"
+      text-halo-color: "#ccc"
+      text-halo-width: 1.5
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: highway-name-path
+    type: symbol
+    minzoom: 15.5
+    layout:
+      symbol-placement: line
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Regular
+      text-rotation-alignment: map
+      text-size:
+        base: 1
+        stops:
+          - - 13
+            - 12
+          - - 14
+            - 13
+    paint:
+      text-color: "#333"
+      text-halo-blur: 0.5
+      text-halo-color: "#fff"
+      text-halo-width: 1
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: highway-name-minor
+    type: symbol
+    minzoom: 15
+    layout:
+      symbol-placement: line
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Regular
+      text-rotation-alignment: map
+      text-size:
+        base: 1
+        stops:
+          - - 13
+            - 12
+          - - 14
+            - 13
+    paint:
+      text-color: "#333"
+      text-halo-blur: 0.5
+      text-halo-color: "#fff"
+      text-halo-width: 1
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: highway-name-major
+    type: symbol
+    minzoom: 12.2
+    layout:
+      symbol-placement: line
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Regular
+      text-rotation-alignment: map
+      text-size:
+        base: 1
+        stops:
+          - - 13
+            - 12
+          - - 14
+            - 13
+    paint:
+      text-color: "#333"
+      text-halo-blur: 0.5
+      text-halo-color: "#fff"
+      text-halo-width: 1
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: airport-label-major
+    type: symbol
+    minzoom: 10
+    layout:
+      text-anchor: top
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Regular
+      text-max-width: 9
+      text-offset:
+        - 0
+        - 0.6
+      text-optional: true
+      text-padding: 2
+      text-size: 12
+      visibility: visible
+    paint:
+      text-color: "#666"
+      text-halo-blur: 0.5
+      text-halo-color: "#fff"
+      text-halo-width: 1
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: place-other
+    type: symbol
+    layout:
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Bold
+      text-letter-spacing: 0.1
+      text-max-width: 9
+      text-size:
+        base: 1.2
+        stops:
+          - - 12
+            - 10
+          - - 15
+            - 14
+      text-transform: uppercase
+      visibility: visible
+    paint:
+      text-color: "#633"
+      text-halo-color: rgba(255,255,255,0.8)
+      text-halo-width: 1.2
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: place-quarter
+    type: symbol
+    layout:
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Regular
+      text-letter-spacing: 0.1
+      text-max-width: 9
+      text-size:
+        base: 1.2
+        stops:
+          - - 12
+            - 10
+          - - 15
+            - 14
+      text-transform: uppercase
+      visibility: visible
+    paint:
+      text-color: "#333"
+      text-halo-color: rgba(255,255,255,0.8)
+      text-halo-width: 1.3
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: place-village
+    type: symbol
+    layout:
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Regular
+      text-max-width: 8
+      text-size:
+        base: 1.2
+        stops:
+          - - 10
+            - 12
+          - - 15
+            - 22
+      visibility: visible
+    paint:
+      text-color: "#333"
+      text-halo-color: rgba(255,255,255,0.8)
+      text-halo-width: 1.2
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: place-town
+    type: symbol
+    layout:
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Regular
+      text-max-width: 8
+      text-size:
+        base: 1.2
+        stops:
+          - - 10
+            - 14
+          - - 15
+            - 24
+      visibility: visible
+    paint:
+      text-color: '#333'
+      text-halo-color: rgba(255,255,255,0.8)
+      text-halo-width: 1.2
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: mountain-peaks
+    type: symbol
+    layout:
+      text-field: 
+        - case
+        - - has
+          - name:ja
+        - - concat
+          - - get
+            - name:ja
+          - "\n"
+          - - to-string
+            - - get
+              - ele
+          - ' m'
+        - ""
+      text-font:
+        - Noto Sans Regular
+      text-line-height: 1.55
+      text-max-width: 9
+      text-offset:
+        - 0
+        - 0.6
+      text-padding: 2
+      text-size: 11
+    paint:
+      text-color: '#000'
+      text-halo-blur: 0.5
+      text-halo-color: '#ffffff'
+      text-halo-width: 2
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: place-city
+    type: symbol
+    layout:
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Regular
+      text-max-width: 8
+      text-size:
+        stops:
+          - - 7
+            - 14
+          - - 11
+            - 16
+      visibility: visible
+    paint:
+      text-color: '#333'
+      text-halo-color: rgba(255,255,255,0.8)
+      text-halo-width: 1.3
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: place-province
+    type: symbol
+    layout:
+      text-anchor: left
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Bold
+      text-max-width: 12
+      text-offset:
+        - 0.4
+        - 0
+      text-size:
+        stops:
+          - - 7
+            - 14
+          - - 11
+            - 20
+      visibility: visible
+    paint:
+      text-color: '#333'
+      text-halo-color: rgba(255,255,255,0.8)
+      text-halo-width: 1.2
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: place-city-capital
+    type: symbol
+    layout:
+      text-anchor: left
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Bold
+      text-max-width: 12
+      text-offset:
+        - 0.4
+        - 0
+      text-size:
+        base: 1.2
+        stops:
+          - - 7
+            - 14
+          - - 11
+            - 26
+      visibility: visible
+    paint:
+      text-color: '#333'
+      text-halo-color: rgba(255,255,255,0.8)
+      text-halo-width: 1.2
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: place-state
+    type: symbol
+    layout:
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Bold
+      text-letter-spacing: 0.1
+      text-max-width: 9
+      text-size:
+        base: 1.2
+        stops:
+          - - 12
+            - 10
+          - - 15
+            - 14
+      text-transform: uppercase
+      visibility: visible
+    paint:
+      text-color: '#633'
+      text-halo-color: rgba(255,255,255,0.8)
+      text-halo-width: 1.2
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: place-country
+    type: symbol
+    layout:
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Bold
+      text-max-width: 6.25
+      text-size:
+        stops:
+          - - 3
+            - 11
+          - - 7
+            - 26
+      text-transform: uppercase
+      visibility: visible
+    paint:
+      text-color: '#334'
+      text-halo-blur: 1
+      text-halo-color: rgba(255,255,255,0.8)
+      text-halo-width: 2
+    property:
+      color-key: overlay.placeholder_text
+  - symbol_id: place-continent
+    type: symbol
+    maxzoom: 1
+    layout:
+      text-field: "{name:ja}"
+      text-font:
+        - Noto Sans Bold
+      text-max-width: 6.25
+      text-size: 14
+      text-transform: uppercase
+      visibility: visible
+    paint:
+      text-color: '#334'
+      text-halo-blur: 1
+      text-halo-color: rgba(255,255,255,0.8)
+      text-halo-width: 2
+    property:
+      color-key: overlay.placeholder_text

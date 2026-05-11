@@ -43,7 +43,10 @@ class DesignSetSwitcherControl {
 
     this.textOverlays = {
       ja: {
-        url: "https://gist.githubusercontent.com/tjmsy/885c9827d644fbbe09055ba96db208b6/raw/c302ce96dc6070800566fb8cb157f16b1a95a881/project-config.yml",
+        url: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.2/src/orilibre-design-set-switcher/assets/project-config-ja.yml",
+      },
+      en: {
+        url: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.2/src/orilibre-design-set-switcher/assets/project-config-en.yml",
       },
     };
 
@@ -547,6 +550,7 @@ class DesignSetSwitcherControl {
       [
         { key: "none", label: "none" },
         { key: "ja", label: "ja" },
+        { key: "en", label: "en" },
       ],
       "designSet-text-overlay",
       this.currentTextOverlay,
