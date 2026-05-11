@@ -482,7 +482,6 @@ class DesignSetSwitcherControl {
     this.radioGroupDesignSet = this._createRadioGroup(
       [
         { key: "ofm", label: "OpenMapTiles" },
-        { key: "shortbread", label: "Shortbread" },
         { key: "hybrid-japan", label: "GSI Hybrid Japan" },
       ],
       "designSets",
