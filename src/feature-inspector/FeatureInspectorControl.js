@@ -66,6 +66,9 @@ class FeatureInspectorControl {
 
     this.map.off("click", this._onMapClick);
     document.removeEventListener("keydown", this._onKeyDown);
+
+    this._popup?.remove();
+    this._popup = undefined;
   }
 
   // -------------------------
