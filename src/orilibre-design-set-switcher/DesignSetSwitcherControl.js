@@ -79,6 +79,7 @@ class DesignSetSwitcherControl {
     this._onForestChange = this._onForestChange.bind(this);
     this._onParkChange = this._onParkChange.bind(this);
     this._onTextOverlayChange = this._onTextOverlayChange.bind(this);
+    this._onMapClick = this._onMapClick.bind(this);
 
     if (this.options.initialHandle) {
       this.designSetHandles[this.options.defaultDesignSet] =
@@ -231,7 +232,10 @@ class DesignSetSwitcherControl {
 
     this.currentTextOverlay = next;
 
-    if (next === "none") return;
+    if (next === "none") {
+      this._setPoiClickEnabled(false);
+      return;
+    }
 
     const config = this.textOverlays[next];
     if (!config) return;
@@ -244,6 +248,8 @@ class DesignSetSwitcherControl {
         return;
       }
 
+      this._setPoiClickEnabled(true);
+
       this.overlayHandle = handle;
     } catch (e) {
       console.error("Failed to load text overlay:", e);
@@ -253,6 +259,59 @@ class DesignSetSwitcherControl {
   _onHillshadeChange(e) {
     this.currentHillshade = e.target.checked;
     this._applyHillshade();
+  }
+
+  _onMapClick(e) {
+    const features = this.map.queryRenderedFeatures(e.point, {
+      filter: ["has", "name"],
+    });
+
+    if (!features.length) return;
+
+    const names = [
+      ...new Set(
+        features.map((f) => {
+          const p = f.properties;
+
+          const langKey =
+            this.currentTextOverlay === "ja"
+              ? "name:ja"
+              : this.currentTextOverlay === "en"
+                ? "name:en"
+                : "name";
+
+          return p[langKey] || p.name;
+        }),
+      ),
+    ];
+
+    this._showPopup(e.lngLat, names);
+  }
+
+  _showPopup(lngLat, data) {
+    const content = `
+    <div style="max-height:250px; overflow:auto; font-size:12px;">
+      <pre style="margin:0;">${data.join("\n")}</pre>
+    </div>
+  `;
+
+    this._popup?.remove();
+
+    this._popup = new maplibregl.Popup()
+      .setLngLat(lngLat)
+      .setHTML(content)
+      .addTo(this.map);
+  }
+
+  _setPoiClickEnabled(enabled) {
+    this.map.off("click", this._onMapClick);
+
+    if (enabled) {
+      this.map.on("click", this._onMapClick);
+    } else {
+      this.map.off("click", this._onMapClick);
+      this._popup?.remove();
+    }
   }
 
   // -------------------------
