@@ -68,6 +68,68 @@ rules:
             - class
             - park
   - symbol_id:
+      - poi-level-3
+    links:
+      - source: ofm
+        source-layer: poi
+        filter:
+          - all
+          - - '=='
+            - $type
+            - Point
+          - - '>='
+            - rank
+            - 25
+          - - any
+            - - '!has'
+              - level
+            - - '=='
+              - level
+              - 0
+  - symbol_id:
+      - poi-level-2
+    links:
+      - source: ofm
+        source-layer: poi
+        filter:
+          - all
+          - - '=='
+            - $type
+            - Point
+          - - <=
+            - rank
+            - 24
+          - - '>='
+            - rank
+            - 15
+          - - any
+            - - '!has'
+              - level
+            - - '=='
+              - level
+              - 0
+  - symbol_id:
+      - poi-level-1
+    links:
+      - source: ofm
+        source-layer: poi
+        filter:
+          - all
+          - - '=='
+            - $type
+            - Point
+          - - <=
+            - rank
+            - 14
+          - - has
+            - name
+          - - any
+            - - '!has'
+              - level
+            - - '=='
+              - level
+              - 0
+  - symbol_id:
       - poi-railway
     links:
       - source: ofm
@@ -159,22 +221,22 @@ rules:
           - town
   - symbol_id:
       - mountain-peaks
-    links: 
+    links:
       - source: ofm
         source-layer: mountain_peak
         filter:
-        - all
-        - - '=='
-          - $type
-          - Point
-        - - <=
-          - rank
-          - 2
-        - - has
-          - name
-        - - '!='
-          - name
-          - ''
+          - all
+          - - "=="
+            - $type
+            - Point
+          - - <=
+            - rank
+            - 2
+          - - has
+            - name
+          - - "!="
+            - name
+            - ""
   - symbol_id:
       - place-city
     links:
