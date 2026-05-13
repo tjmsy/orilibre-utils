@@ -3,6 +3,7 @@ import { isomizer } from "https://cdn.jsdelivr.net/gh/tjmsy/maplibre-gl-isomizer
 class DesignSetSwitcherControl {
   constructor(options = {}) {
     this.options = {
+      initialHandle: null,
       defaultDesignSet: "ofm",
       defaultBackgroundColor: "green",
       defaultForestColor: "white",
@@ -78,6 +79,11 @@ class DesignSetSwitcherControl {
     this._onForestChange = this._onForestChange.bind(this);
     this._onParkChange = this._onParkChange.bind(this);
     this._onTextOverlayChange = this._onTextOverlayChange.bind(this);
+
+    if (this.options.initialHandle) {
+      this.designSetHandles[this.options.defaultDesignSet] =
+        this.options.initialHandle;
+    }
   }
 
   // -------------------------
@@ -89,6 +95,8 @@ class DesignSetSwitcherControl {
 
     this._createUI();
     this._bindUIEvents();
+
+    this._applyHillshade();
 
     return this.container;
   }
@@ -197,6 +205,7 @@ class DesignSetSwitcherControl {
     this._bringOverlayToFront();
 
     this._applyStyleSafe();
+    this._applyHillshade();
   }
 
   _onBackgroundChange(e) {
@@ -249,6 +258,10 @@ class DesignSetSwitcherControl {
   // -------------------------
   // Core logic
   // -------------------------
+
+  setInitialHandle(handle) {
+    this.designSetHandles[this.currentDesignSet] = handle;
+  }
 
   _resetMap(projectKey) {
     const handle = this.designSetHandles[projectKey];
@@ -311,7 +324,7 @@ class DesignSetSwitcherControl {
     this._applyBackground(this.currentBackgroundColor);
     this._applyForest(this.currentForestColor);
     this._applyPark(this.currentParkColor);
-    this._applyHillshade(this.currentParkColor);
+    this._applyHillshade();
   }
 
   _applyBackground(bg) {
