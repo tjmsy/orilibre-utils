@@ -396,7 +396,7 @@ class DesignSetSwitcherControl {
       ? designSet.outOfBoundsLayer
       : [designSet.outOfBoundsLayer];
 
-    const color = bg === "green" ? "#9BBB1D" : "#ffffff";
+    const color = bg === "green" ? "#ACCF20" : "#ffffff";
 
     if (this.map.getLayer("background")) {
       this.map.setPaintProperty("background", "background-color", color);
