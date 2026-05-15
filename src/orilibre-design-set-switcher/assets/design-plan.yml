@@ -53,21 +53,6 @@ rules:
             - ocean
             - sea
   - symbol_id:
-      - poi-park
-    links:
-      - source: ofm
-        source-layer: poi
-        filter:
-          - all
-          - - "=="
-            - $type
-            - Point
-          - - has
-            - name
-          - - "=="
-            - class
-            - park
-  - symbol_id:
       - poi-level-3
     links:
       - source: ofm
@@ -130,6 +115,21 @@ rules:
               - level
               - 0
   - symbol_id:
+      - poi-park
+    links:
+      - source: ofm
+        source-layer: poi
+        filter:
+          - all
+          - - "=="
+            - $type
+            - Point
+          - - has
+            - name
+          - - "=="
+            - class
+            - park
+  - symbol_id:
       - poi-railway
     links:
       - source: ofm
@@ -183,6 +183,7 @@ rules:
           - secondary
           - tertiary
           - trunk
+          - motorway
   - symbol_id:
       - airport-label-major
     links:
