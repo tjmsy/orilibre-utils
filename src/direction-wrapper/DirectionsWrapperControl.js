@@ -222,7 +222,7 @@ class DirectionsWrapperControl {
     this.map.setPaintProperty(
       "maplibre-gl-directions-alt-routeline",
       "line-color",
-      "#99f",
+      "#e0ffff",
     );
     this.map.setPaintProperty(
       "maplibre-gl-directions-alt-routeline-casing",
