@@ -44,10 +44,10 @@ class DesignSetSwitcherControl {
 
     this.textOverlays = {
       ja: {
-        url: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.3/src/orilibre-design-set-switcher/assets/project-config-ja.yml",
+        url: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.4/src/orilibre-design-set-switcher/assets/project-config-ja.yml",
       },
       en: {
-        url: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.3/src/orilibre-design-set-switcher/assets/project-config-en.yml",
+        url: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.4/src/orilibre-design-set-switcher/assets/project-config-en.yml",
       },
     };
 

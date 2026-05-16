@@ -13,8 +13,8 @@ map:
       url: https://tiles.openfreemap.org/sprites/ofm_f384/ofm
 resources:
   design-plan:
-    file: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.3/src/orilibre-design-set-switcher/assets/design-plan.yml"
+    file: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.4/src/orilibre-design-set-switcher/assets/design-plan.yml"
   symbol-palette:
-    file: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.3/src/orilibre-design-set-switcher/assets/symbol-palette-ja.yml"
+    file: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.4/src/orilibre-design-set-switcher/assets/symbol-palette-ja.yml"
   color-palette:
-    file: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.3/src/orilibre-design-set-switcher/assets/color-palette.yml"
+    file: "https://cdn.jsdelivr.net/gh/tjmsy/orilibre-utils@0.4/src/orilibre-design-set-switcher/assets/color-palette.yml"
