@@ -206,8 +206,6 @@ class DesignSetSwitcherControl {
 
     this.designSetHandles[next] = handle;
 
-    this._bringOverlayToFront();
-
     this._applyStyleSafe();
     this._applyHillshade();
   }
@@ -350,16 +348,6 @@ class DesignSetSwitcherControl {
     images.forEach((id) => {
       if (this.map.hasImage(id)) {
         this.map.removeImage(id);
-      }
-    });
-  }
-
-  _bringOverlayToFront() {
-    if (!this.overlayHandle?.layers) return;
-
-    this.overlayHandle.layers.forEach((id) => {
-      if (this.map.getLayer(id)) {
-        this.map.moveLayer(id);
       }
     });
   }
