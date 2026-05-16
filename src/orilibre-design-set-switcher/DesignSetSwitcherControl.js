@@ -194,7 +194,10 @@ class DesignSetSwitcherControl {
 
     this.currentDesignSet = next;
 
-    const handle = await isomizer(this.map, this.designSets[next].url);
+    const handle = await isomizer(this.map, this.designSets[next].url, {
+      metadata: { role: "basemap" },
+      enableLayerGrouping: true,
+    });
 
     if (requestId !== this._designSetRequestId) {
       this._resetMapFromHandle(handle);
@@ -241,7 +244,10 @@ class DesignSetSwitcherControl {
     if (!config) return;
 
     try {
-      const handle = await isomizer(this.map, config.url);
+      const handle = await isomizer(this.map, config.url, {
+        metadata: { role: "overlay" },
+        enableLayerGrouping: true,
+      });
 
       if (this.currentTextOverlay !== next) {
         this._resetMapFromHandle(handle);
