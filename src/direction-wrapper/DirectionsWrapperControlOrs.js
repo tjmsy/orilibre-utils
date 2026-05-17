@@ -53,6 +53,7 @@ class DirectionsWrapperControl {
     this._unbindEvents();
 
     this.directions.off("fetchroutesend", this._onFetchRoutesEnd);
+    this._removeORSAttribution();
 
     this.map.off("click", this._onMapClick);
 
@@ -126,6 +127,8 @@ class DirectionsWrapperControl {
       const descent = routes[0].descent ?? 0;
 
       this._updateSummary(distance, duration, ascent, descent);
+
+      this._addORSAttribution();
     };
 
     this.directions.on("fetchroutesend", this._onFetchRoutesEnd);
@@ -154,7 +157,12 @@ class DirectionsWrapperControl {
 
     if (!route) return;
 
-    this._updateSummary(route.distance, route.duration, route.ascent, route.descent);
+    this._updateSummary(
+      route.distance,
+      route.duration,
+      route.ascent,
+      route.descent,
+    );
   }
 
   _onClearButtonClick() {
@@ -187,6 +195,7 @@ class DirectionsWrapperControl {
 
   _resetSummary() {
     this.routeSummaryField.innerText = "Click on map";
+    this._removeORSAttribution();
   }
 
   _updateSummary(distance, duration, ascent, descent) {
@@ -198,6 +207,38 @@ class DirectionsWrapperControl {
     const timeStr = h > 0 ? `${h}h ${m}m ${s}s` : `${m}m ${s}s`;
 
     this.routeSummaryField.innerText = `Distance: ${km} km\nDuration: ${timeStr}\nAscent: ${ascent} m\nDescent: ${descent} m`;
+  }
+
+  _addORSAttribution() {
+    const ctrl = this.map._controls.find(
+      (c) => c instanceof maplibregl.AttributionControl,
+    );
+    if (!ctrl) return;
+
+    const container = ctrl._container;
+    if (!container) return;
+
+    if (this._orsAttrEl) return;
+
+    const el = document.createElement("span");
+    el.textContent = " | © openrouteservice.org by HeiGIT";
+
+    container.appendChild(el);
+    this._orsAttrEl = el;
+  }
+
+  _removeORSAttribution() {
+    if (this._orsAttrEl) {
+      this._orsAttrEl.remove();
+      this._orsAttrEl = null;
+    }
+  }
+
+  _removeORSAttribution() {
+    if (this._orsAttrEl) {
+      this._orsAttrEl.remove();
+      this._orsAttrEl = null;
+    }
   }
 
   _lineStyleChange() {
