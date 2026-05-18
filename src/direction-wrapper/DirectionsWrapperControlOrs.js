@@ -121,12 +121,9 @@ class DirectionsWrapperControl {
       this._routesCache = routes;
       this._selectedRouteIndex = 0;
 
-      const distance = routes[0].distance ?? 0;
-      const duration = routes[0].duration ?? 0;
-      const ascent = routes[0].ascent ?? 0;
-      const descent = routes[0].descent ?? 0;
+      const route = routes[0];
 
-      this._updateSummary(distance, duration, ascent, descent);
+      this._updateRouteInfo(route);
 
       this._addORSAttribution();
     };
@@ -157,19 +154,14 @@ class DirectionsWrapperControl {
 
     if (!route) return;
 
-    this._updateSummary(
-      route.distance,
-      route.duration,
-      route.ascent,
-      route.descent,
-    );
+    this._updateRouteInfo(route);
   }
 
   _onClearButtonClick() {
     this.directions.clear();
     this._routesCache = [];
     this._selectedRouteIndex = 0;
-    this._resetSummary();
+    this._resetRouteInfo();
   }
 
   _onProfileChange(e) {
@@ -193,9 +185,21 @@ class DirectionsWrapperControl {
     this.directions.setWaypoints(waypoints, profiles);
   }
 
-  _resetSummary() {
+  _resetRouteInfo() {
+    this._emitRouteChange(null);
     this.routeSummaryField.innerText = "Click on map";
     this._removeORSAttribution();
+  }
+
+  _updateRouteInfo(route) {
+    this._emitRouteChange(route);
+
+    const distance = route.distance ?? 0;
+    const duration = route.duration ?? 0;
+    const ascent = route.ascent ?? 0;
+    const descent = route.descent ?? 0;
+
+    this._updateSummary(distance, duration, ascent, descent);
   }
 
   _updateSummary(distance, duration, ascent, descent) {
@@ -272,6 +276,25 @@ class DirectionsWrapperControl {
       "line-color",
       "#444",
     );
+  }
+
+  _emitRouteChange(route) {
+    if (!route) {
+      this.map.fire("routechange", {
+        hasRoute: false,
+      });
+      return;
+    }
+
+    this.map.fire("routechange", {
+      hasRoute: true,
+      coords: route.geometry.coordinates,
+
+      distance: route.distance,
+      duration: route.duration,
+      ascent: route.ascent,
+      descent: route.descent,
+    });
   }
 
   // -------------------------
@@ -374,7 +397,7 @@ class DirectionsWrapperControl {
   _createRouteSummaryField() {
     this.routeSummaryField = document.createElement("div");
     this.routeSummaryField.style.whiteSpace = "pre-line";
-    this._resetSummary();
+    this._resetRouteInfo();
   }
 }
 
