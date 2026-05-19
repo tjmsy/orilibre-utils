@@ -264,7 +264,7 @@ export default class ElevationGraphControl {
         type: "geojson",
         data: {
           type: "Point",
-          coordinates: [0, 0],
+          coordinates: [],
         },
       });
     }
