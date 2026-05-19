@@ -149,7 +149,7 @@ export default class ElevationGraphControl {
       (lng, lat, z, tileSize) => project(maplibregl, lng, lat, z, tileSize),
       {
         z: 14,
-        tileSize: 512,
+        tileSize: this.tileSize,
       },
     );
 
