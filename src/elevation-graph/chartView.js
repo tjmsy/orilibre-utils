@@ -112,7 +112,7 @@ export function createElevationChart(canvas, { onHoverDistance, onLeave }) {
       },
 
       plugins: {
-        legend: { display: true },
+        legend: { display: false },
         tooltip: { enabled: false },
       },
 
