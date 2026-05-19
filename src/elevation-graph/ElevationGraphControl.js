@@ -179,15 +179,21 @@ export default class ElevationGraphControl {
   // ------------------------------
   // API
   // ------------------------------
-  async setCoords(coords) {
+  async setData(input) {
     this.init();
 
-    this.model.coords = coords;
+    const coords = this._normalizeToCoords(input);
 
     if (!coords?.length) {
       this.clear();
       return;
     }
+
+    await this.setCoords(coords);
+  }
+
+  async setCoords(coords) {
+    this.model.coords = coords;
 
     const { sampled, profile } = await this.service.build(coords);
 
@@ -303,6 +309,37 @@ export default class ElevationGraphControl {
     };
 
     this.container.appendChild(btn);
+  }
+
+  // ==============================
+  // GEOJson convert
+  // ==============================
+
+  _normalizeToCoords(input) {
+    if (!input) return [];
+
+    // coords配列
+    if (Array.isArray(input)) return input;
+
+    // FeatureCollection
+    if (input.type === "FeatureCollection") {
+      const line = input.features.find(
+        (f) => f.geometry?.type === "LineString",
+      );
+      return line?.geometry?.coordinates ?? [];
+    }
+
+    // Feature
+    if (input.type === "Feature") {
+      return input.geometry?.coordinates ?? [];
+    }
+
+    // LineString
+    if (input.type === "LineString") {
+      return input.coordinates ?? [];
+    }
+
+    return [];
   }
 }
 
