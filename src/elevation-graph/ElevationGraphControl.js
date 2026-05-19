@@ -9,7 +9,7 @@ import {
   clearChart,
 } from "./chartView.js";
 import { findClosestDistanceOnRoute } from "./routeDistance.js";
-import { ElevationService } from "./elevationService.js";
+import { ElevationService } from "./ElevationService.js";
 
 // ==============================
 // Model
